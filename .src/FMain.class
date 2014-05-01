@@ -1,0 +1,183 @@
+' Gambas class file
+
+Public Sub _new()
+  
+End
+
+Public Sub Form_Open()
+   ComboBox1.Index = 0
+   
+  
+End
+
+Public Sub MyHTTP_Connect()
+  
+  '("Connected, waiting for reply...")
+  
+End
+
+Public Sub MyHTTP_Error()
+  
+  Message.Info(("Error: ") & MyHTTP.Status) 'REMOVE ME/CHANGE ME
+  
+End
+  
+Public Sub MyHTTP_Read()
+  Dim sBuf As String
+  Dim MyLoop As Integer
+  Dim City_Not_found As String
+ 
+  Dim Temp_File As String[]
+  Dim Temp_File_Line As String = ""
+  Dim bla As String[]
+  Dim bla_Line As String
+  
+   If Lof(MyHTTP) Then 
+    Read #MyHTTP, sBuf, Lof(MyHTTP)
+      'Check For Error: Not found city / {"message":"Error: Not found city","cod":"404"}
+      City_Not_found = Mid$(sBuf, 13)
+      City_Not_found = Mid$(City_Not_found, 1, -15)
+      If City_Not_found = "Error: Not found city" Then  'If InStr(City_Not_found, "Error: Not found city") = 1 Then
+      Message.Info("City Not found.")
+      Else
+        
+
+        'Replace(<?">/) fuck you xml
+        
+        'sBuf = Replace(sBuf, "<", Null)
+        sBuf = Replace(sBuf, "?", Null)
+        sBuf = Replace(sBuf, "/", Null)
+        'sBuf = Replace(sBuf, ">", Null)
+        sBuf = Replace(sBuf, Chr$(34), Null)
+        'sBuf = Str$(sBuf))
+           
+        'Split File into array
+         Temp_File = Split(sBuf, "\n", Null, True, False)
+        For Each Temp_File_Line In Temp_File
+         
+         
+         '<city id / <city id=5301388 name=Lake Havasu City>
+           Temp_File_Line = LTrim$(Temp_File_Line)
+          If InStr(Temp_File_Line, "<city id=") = 1 Then
+            Temp_File_Line = Replace(Temp_File_Line, ">", Null)
+            'Temp_File_Line = Replace(Temp_File_Line, "city id=", Null)
+            Temp_File_Line = Replace(Temp_File_Line, "<", Null)
+           ' Temp_File_Line = Replace(Temp_File_Line, "name=", Null)
+            bla = Split(Temp_File_Line, "=", Null, True, False)
+         
+            'Print RInStr(Temp_File_Line, "city id=")
+            'Print RInStr(Temp_File_Line, "name=")
+            
+            'For Each bla_Line In bla
+             Print Temp_File_Line
+            
+           ' Print bla.Extract(1)
+        
+            'Next
+             'Message(Temp_File_Line)
+          Endif
+          
+         '<coord lon=
+          'If InStr(LTrim$(Temp_File_Line), "<coord lon=") = 1 Then
+             'Message(Temp_File_Line)
+          'Endif
+                    
+         '<country>
+          'If InStr(LTrim$(Temp_File_Line), "<country>") = 1 Then
+             'Message(Temp_File_Line)
+         ' Endif
+                    
+         '<sun rise=
+          'If InStr(LTrim$(Temp_File_Line), "<sun rise=") = 1 Then
+             'Message(Temp_File_Line)
+          'Endif
+                    
+         '<temperature value=
+          'If InStr(LTrim$(Temp_File_Line), "<temperature value=") = 1 Then
+            'Message(Temp_File_Line)
+          'Endif
+          
+           '<humidity value=
+          'If InStr(LTrim$(Temp_File_Line), "<humidity value=") = 1 Then
+             'Message(Temp_File_Line)
+          'Endif
+          
+           '<pressure value=
+          'If InStr(LTrim$(Temp_File_Line), "<pressure value=") = 1 Then
+             'Message(Temp_File_Line)
+          'Endif
+          
+           '<speed value=
+          'If InStr(LTrim$(Temp_File_Line), "<speed value=") = 1 Then
+             'Message(Temp_File_Line)
+          'Endif
+          
+            '<direction value=
+          'If InStr(LTrim$(Temp_File_Line), "<direction value=") = 1 Then
+             'Message(Temp_File_Line)
+          'Endif
+          
+            '<clouds value=
+          'If InStr(LTrim$(Temp_File_Line), "<clouds value=") = 1 Then
+             'Message(Temp_File_Line)
+         'Endif
+          
+            '<weather number=
+          'If InStr(LTrim$(Temp_File_Line), "<weather number=") = 1 Then
+             'Message(Temp_File_Line)
+          'Endif
+          
+            '<lastupdate value=
+          'If InStr(LTrim$(Temp_File_Line), "<lastupdate value=") = 1 Then
+             'Message(Temp_File_Line)
+          'Endif
+        Next
+        
+       TextArea1.Text = TextArea1.Text & sBuf
+   Endif
+    
+  End If
+End
+
+Public Sub ComboBox1_Click()
+  'Cloud Cover
+
+  If ComboBox1.Index = 0 Then
+    WebView1.Url = "http://openweathermap.org/help/tiles.html?opacity=0.8&l=clouds"
+  Endif
+  'precipitation
+  If ComboBox1.Index = 1 Then
+    WebView1.Url = "http://openweathermap.org/help/tiles.html?opacity=0.8&l=precipitation"
+  Endif
+  'Pressure
+  If ComboBox1.Index = 2 Then
+    WebView1.Url = "http://openweathermap.org/help/tiles.html?opacity=0.8&l=pressure"
+  Endif
+  'Wind speed
+  If ComboBox1.Index = 3 Then
+    WebView1.Url = "http://openweathermap.org/help/tiles.html?opacity=0.8&l=wind"
+  Endif
+  'Temperature
+  If ComboBox1.Index = 4 Then
+    WebView1.Url = "http://openweathermap.org/help/tiles.html?opacity=0.8&l=temperature"
+  Endif
+  'Snow Precip
+  If ComboBox1.Index = 5 Then
+    WebView1.Url = "http://openweathermap.org/help/tiles.html?opacity=0.8&l=snow"
+  Endif
+  
+End
+
+Public Sub Button1_Click()
+Dim City As String = TextBox1.Text
+  '("Connecting...")
+  TextArea1.Clear
+  MyHTTP.Url = "http://api.openweathermap.org/data/2.5/weather?q=" & City & "&mode=xml"
+  MyHTTP.Get()
+
+End
+Public Sub Label_openweathermap_MouseDown()
+
+Shell "xdg-open http://openweathermap.org"
+
+End

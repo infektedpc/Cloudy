@@ -1,0 +1,114 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  MoveScaled(0,0,93,57)
+  { TabStrip1 TabStrip
+    MoveScaled(0,0,91,51)
+    Count = 3
+    Index = 0
+    Text = ("Forecast")
+    Picture = Picture["Weather-Sleet-icon.png"]
+    { PictureBox_CurrentWeather PictureBox
+      MoveScaled(2,2,16,16)
+      Picture = Picture["Weather-Clouds-icon128.png"]
+      Stretch = True
+    }
+    { Label_ForecastFor Label
+      MoveScaled(46,1,44,4)
+      Font = Font["+6"]
+      Text = ("Forecast For Ozark, MO")
+    }
+    { Label_CurrentCondition Label
+      MoveScaled(5,25,11,4)
+      Font = Font["+5"]
+      Text = ("Cloudy")
+    }
+    { Label_Temp Label
+      MoveScaled(7,20,8,4)
+      Font = Font["Underline,+6"]
+      Text = ("43 F")
+    }
+    { Label_WindSpeed Label
+      MoveScaled(23,13,32,4)
+      Font = Font["+2"]
+      Text = ("Wind Speed:")
+    }
+    { Label_Humidity Label
+      MoveScaled(23,19,19,4)
+      Font = Font["+2"]
+      Text = ("Humidity:")
+    }
+    { Label_Pressure Label
+      MoveScaled(23,25,19,4)
+      Font = Font["+2"]
+      Text = ("Pressure:")
+    }
+    { Label_CloudCover Label
+      MoveScaled(23,31,23,4)
+      Font = Font["+2"]
+      Text = ("Cloud Cover:")
+    }
+    { Label_Visibility Label
+      MoveScaled(56,19,23,4)
+      Font = Font["+2"]
+      Text = ("Visibility:")
+    }
+    { Label_Sunrise Label
+      MoveScaled(56,25,24,4)
+      Font = Font["+2"]
+      Text = ("Sunrise:")
+    }
+    { Label_Sunset Label
+      MoveScaled(56,31,24,4)
+      Font = Font["+2"]
+      Text = ("Sunset:")
+    }
+    { Label_WindDirection Label
+      MoveScaled(56,13,24,4)
+      Font = Font["+2"]
+      Text = ("Wind Direction:")
+    }
+    { Label_openweathermap Label
+      MoveScaled(63,43,30,4)
+      Font = Font["-1"]
+      Foreground = Color.SelectedBackground
+      Text = ("Powered By: openweathermap.org")
+    }
+    { MyHTTP #HttpClient
+      #MoveScaled(39,25)
+    }
+    { TextArea1 TextArea
+      MoveScaled(1,1,88,45)
+    }
+    Index = 1
+    Text = ("Extended")
+    Picture = Picture["Very-Basic-Calendar-icon.png"]
+    Index = 2
+    Text = ("Weather Map")
+    Picture = Picture["32x32-black-white-metro-world-map-icon.png"]
+    { WebView1 WebView
+      MoveScaled(0,0,90,46)
+    }
+    Index = 0
+  }
+  { ComboBox1 ComboBox
+    MoveScaled(67,52,24,4)
+    ReadOnly = True
+    List = [("Cloud Cover"), ("Precipitation"), ("Pressure"), ("Wind Speed"), ("Snow Precip")]
+  }
+  { TextBox1 TextBox
+    MoveScaled(17,52,24,4)
+    Text = ("Lake Havasu City")
+  }
+  { Label1 Label
+    MoveScaled(2,52,14,4)
+    Text = ("City Ex: London")
+  }
+  { Label2 Label
+    MoveScaled(53,52,13,4)
+    Text = ("Weather Map:")
+  }
+  { Button1 Button
+    MoveScaled(42,52,5,4)
+  }
+}
