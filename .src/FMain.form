@@ -110,5 +110,6 @@
   }
   { Button1 Button
     MoveScaled(42,52,5,4)
+    Picture = Picture["icon:/22/sun"]
   }
 }

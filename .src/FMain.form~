@@ -98,7 +98,7 @@
   }
   { TextBox1 TextBox
     MoveScaled(17,52,24,4)
-    Text = ("Lake Havasu City")
+    Text = ("lake havasu city")
   }
   { Label1 Label
     MoveScaled(2,52,14,4)
