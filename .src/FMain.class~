@@ -5,8 +5,9 @@ Public Sub _new()
 End
 
 Public Sub Form_Open()
-   ComboBox1.Index = 0
-   
+  
+  FMain.Center
+  ComboBox1.Index = 0
   
 End
 
@@ -21,127 +22,143 @@ Public Sub MyHTTP_Error()
   Message.Info(("Error: ") & MyHTTP.Status) 'REMOVE ME/CHANGE ME
   
 End
-  
+
 Public Sub MyHTTP_Read()
+  
   Dim sBuf As String
-  Dim MyLoop As Integer
-  Dim City_Not_found As String
- 
+  'Dim MyLoop As Integer
+  Dim City_Not_found As String = ""
   Dim Temp_File As String[]
   Dim Temp_File_Line As String = ""
-  Dim bla As String[]
-  Dim bla_Line As String
+  Dim ForecastFor As String = ""
+  Dim City_ID As String = ""
+  Dim Sun_Rise As String = ""
+  Dim Sun_Set As String = ""
+  Dim Humidity As String = ""
+  Dim Humidity_Unit As String = ""
+  Dim Wind_Speed As String = ""
+  Dim Wind_Name As String = ""
+  Dim CurrentCondition As String = ""
+  Dim Wind_Direction As String = ""
+  Dim Pressure As String = ""
+  Dim Pressure_Unit As String = ""
+  Dim Temperature As String = ""
+  Dim Temperature_Unit As String = ""
   
-   If Lof(MyHTTP) Then 
+  If Lof(MyHTTP) Then 
     Read #MyHTTP, sBuf, Lof(MyHTTP)
-      'Check For Error: Not found city / {"message":"Error: Not found city","cod":"404"}
-      City_Not_found = Mid$(sBuf, 13)
-      City_Not_found = Mid$(City_Not_found, 1, -15)
-      If City_Not_found = "Error: Not found city" Then  'If InStr(City_Not_found, "Error: Not found city") = 1 Then
+    'Check For Error: Not found city / {"message":"Error: Not found city","cod":"404"}
+    City_Not_found = Mid$(sBuf, 13)
+    City_Not_found = Mid$(City_Not_found, 1, -15)
+    If City_Not_found = "Error: Not found city" Then  'If InStr(City_Not_found, "Error: Not found city") = 1 Then
       Message.Info("City Not found.")
-      Else
+    Else
+      
+      'Replace(<?">/) fuck you xml
+      
+      'sBuf = Replace(sBuf, "<", Null)
+      sBuf = Replace(sBuf, "?", Null)
+      sBuf = Replace(sBuf, "/", Null)
+      'sBuf = Replace(sBuf, ">", Null)
+      sBuf = Replace(sBuf, Chr$(34), Null)
+      'sBuf = Str$(sBuf))
+      
+      'Split File into array
+      Temp_File = Split(sBuf, "\n", Null, True, False)
+      For Each Temp_File_Line In Temp_File
         
-
-        'Replace(<?">/) fuck you xml
+        Temp_File_Line = LTrim$(Temp_File_Line)
         
-        'sBuf = Replace(sBuf, "<", Null)
-        sBuf = Replace(sBuf, "?", Null)
-        sBuf = Replace(sBuf, "/", Null)
-        'sBuf = Replace(sBuf, ">", Null)
-        sBuf = Replace(sBuf, Chr$(34), Null)
-        'sBuf = Str$(sBuf))
-           
-        'Split File into array
-         Temp_File = Split(sBuf, "\n", Null, True, False)
-        For Each Temp_File_Line In Temp_File
-         
-         
-         '<city id / <city id=5301388 name=Lake Havasu City>
-           Temp_File_Line = LTrim$(Temp_File_Line)
-          If InStr(Temp_File_Line, "<city id=") = 1 Then
-            Temp_File_Line = Replace(Temp_File_Line, ">", Null)
-            'Temp_File_Line = Replace(Temp_File_Line, "city id=", Null)
-            Temp_File_Line = Replace(Temp_File_Line, "<", Null)
-           ' Temp_File_Line = Replace(Temp_File_Line, "name=", Null)
-            bla = Split(Temp_File_Line, "=", Null, True, False)
-         
-            Print RInStr(Temp_File_Line, "city id=")
-            Print RInStr(Temp_File_Line, "name=")
-            
-            'For Each bla_Line In bla
-             Print Temp_File_Line
-            
-           ' Print bla.Extract(1)
+        '<city id / <city id=5301388 name=Lake Havasu City>
+        Temp_File_Line = LTrim$(Temp_File_Line)
+        If InStr(Temp_File_Line, "<city id=") = 1 Then
+          Temp_File_Line = Replace(Temp_File_Line, ">", Null)
+          Temp_File_Line = Replace(Temp_File_Line, "<", Null)
+          City_ID = Mid$(Temp_File_Line, 9, - (InStr(Temp_File_Line, "name=")) - 5)
+          ForecastFor = Mid$(Temp_File_Line, InStr(Temp_File_Line, "name=") + 5)
+          Label_ForecastFor.text = "Forecast For " & ForecastFor
+        Endif
         
-            'Next
-             'Message(Temp_File_Line)
-          Endif
-          
-         '<coord lon=
-          'If InStr(LTrim$(Temp_File_Line), "<coord lon=") = 1 Then
-             'Message(Temp_File_Line)
-          'Endif
-                    
-         '<country>
-          'If InStr(LTrim$(Temp_File_Line), "<country>") = 1 Then
-             'Message(Temp_File_Line)
-         ' Endif
-                    
-         '<sun rise=
-          'If InStr(LTrim$(Temp_File_Line), "<sun rise=") = 1 Then
-             'Message(Temp_File_Line)
-          'Endif
-                    
-         '<temperature value=
-          'If InStr(LTrim$(Temp_File_Line), "<temperature value=") = 1 Then
-            'Message(Temp_File_Line)
-          'Endif
-          
-           '<humidity value=
-          'If InStr(LTrim$(Temp_File_Line), "<humidity value=") = 1 Then
-             'Message(Temp_File_Line)
-          'Endif
-          
-           '<pressure value=
-          'If InStr(LTrim$(Temp_File_Line), "<pressure value=") = 1 Then
-             'Message(Temp_File_Line)
-          'Endif
-          
-           '<speed value=
-          'If InStr(LTrim$(Temp_File_Line), "<speed value=") = 1 Then
-             'Message(Temp_File_Line)
-          'Endif
-          
-            '<direction value=
-          'If InStr(LTrim$(Temp_File_Line), "<direction value=") = 1 Then
-             'Message(Temp_File_Line)
-          'Endif
-          
-            '<clouds value=
-          'If InStr(LTrim$(Temp_File_Line), "<clouds value=") = 1 Then
-             'Message(Temp_File_Line)
-         'Endif
-          
-            '<weather number=
-          'If InStr(LTrim$(Temp_File_Line), "<weather number=") = 1 Then
-             'Message(Temp_File_Line)
-          'Endif
-          
-            '<lastupdate value=
-          'If InStr(LTrim$(Temp_File_Line), "<lastupdate value=") = 1 Then
-             'Message(Temp_File_Line)
-          'Endif
-        Next
+        '<sun rise=2014-05-06T12:41:30 set=2014-05-07T02:26:10>
+        If InStr(Temp_File_Line, "<sun rise=") = 1 Then
+          Temp_File_Line = Replace(Temp_File_Line, ">", Null)
+          Temp_File_Line = Replace(Temp_File_Line, "<", Null)
+          Sun_Rise = Mid$(Temp_File_Line, 10, - (InStr(Temp_File_Line, "set=")) + 6)
+          Label_Sunrise.Text = "Sunrise: " & Sun_Rise
+          Sun_Set = Mid$(Temp_File_Line, InStr(Temp_File_Line, "set=") + 4)
+          Label_Sunset.Text = "Sunset: " & Sun_Set
+        Endif
         
-       TextArea1.Text = TextArea1.Text & sBuf
-   Endif
+        '<temperature value=68.65 min=68 max=69.01 unit=fahrenheit>
+        If InStr(Temp_File_Line, "<temperature value=") = 1 Then
+          Temp_File_Line = Replace(Temp_File_Line, ">", Null)
+          Temp_File_Line = Replace(Temp_File_Line, "<", Null)
+          
+          'Temperature = Mid$(Temp_File_Line, 16) ', - (InStr(Temp_File_Line, "unit=")) + 16)
+          'Temperature_Unit = Mid$(Temp_File_Line, InStr(Temp_File_Line, "unit=") + 5)
+          
+          'Label_Temp.text = Temperature & " " & Temperature_Unit
+        Endif
+        
+        '<humidity value=40 unit=%>
+        If InStr(Temp_File_Line, "<humidity value=") = 1 Then
+          Temp_File_Line = Replace(Temp_File_Line, ">", Null)
+          Temp_File_Line = Replace(Temp_File_Line, "<", Null)
+          
+          Humidity = Mid$(Temp_File_Line, 16, - (InStr(Temp_File_Line, "unit=")) + 21)
+          Humidity_Unit = Mid$(Temp_File_Line, InStr(Temp_File_Line, "unit=") + 5)
+          
+          Label_Humidity.text = "Humidity: " & Humidity & " " & Humidity_Unit
+        Endif
+        
+        '<pressure value=999 unit=hPa>
+        If InStr(Temp_File_Line, "<pressure value=") = 1 Then
+          Temp_File_Line = Replace(Temp_File_Line, ">", Null)
+          Temp_File_Line = Replace(Temp_File_Line, "<", Null)
+          
+          Pressure = Mid$(Temp_File_Line, 16, - InStr(Temp_File_Line, "unit=") + 6)
+          
+          Pressure_Unit = Mid$(Temp_File_Line, InStr(Temp_File_Line, "unit=") + 5)
+          
+          Label_Pressure.text = "Pressure: " & Pressure & " " & Pressure_Unit
+        Endif
+        
+        '<speed value=6.65 name=Moderate breeze>
+        If InStr(Temp_File_Line, "<speed value=") = 1 Then
+          Temp_File_Line = Replace(Temp_File_Line, ">", Null)
+          Temp_File_Line = Replace(Temp_File_Line, "<", Null)
+          Wind_Speed = Mid$(Temp_File_Line, 13, - (InStr(Temp_File_Line, "name=")) - 3)
+          Label_WindSpeed.text = "Wind Speed: " & Wind_Speed
+          Wind_Name = Mid$(Temp_File_Line, InStr(Temp_File_Line, "name=") + 5)
+        Endif
+        
+        '<direction value=123 code=ESE name=East-southeast>
+        If InStr(Temp_File_Line, "<direction value=") = 1 Then
+          Temp_File_Line = Replace(Temp_File_Line, ">", Null)
+          Temp_File_Line = Replace(Temp_File_Line, "<", Null)
+          Wind_Direction = Mid$(Temp_File_Line, InStr(Temp_File_Line, "name=") + 5)
+          Label_WindDirection.text = "Wind Direction: " & Wind_Direction
+        Endif
+        
+        '<clouds value=0 name=sky is clear>
+        If InStr(Temp_File_Line, "<clouds value=") = 1 Then
+          Temp_File_Line = Replace(Temp_File_Line, ">", Null)
+          Temp_File_Line = Replace(Temp_File_Line, "<", Null)
+          CurrentCondition = Mid$(Temp_File_Line, InStr(Temp_File_Line, "name=") + 5)
+          Label_CurrentCondition.text = CurrentCondition
+        Endif
+      Next
+      
+      TextArea1.Text = TextArea1.Text & sBuf
+    Endif
     
   End If
+  
 End
 
 Public Sub ComboBox1_Click()
   'Cloud Cover
-
+  
   If ComboBox1.Index = 0 Then
     WebView1.Url = "http://openweathermap.org/help/tiles.html?opacity=0.8&l=clouds"
   Endif
@@ -169,15 +186,17 @@ Public Sub ComboBox1_Click()
 End
 
 Public Sub Button1_Click()
-Dim City As String = TextBox1.Text
+  
+  Dim City As String = TextBox1.Text
   '("Connecting...")
   TextArea1.Clear
-  MyHTTP.Url = "http://api.openweathermap.org/data/2.5/weather?q=" & City & "&mode=xml"
+  MyHTTP.Url = "http://api.openweathermap.org/data/2.5/weather?q=" & City & "&mode=xml&units=imperial"
   MyHTTP.Get()
-
+  
 End
+
 Public Sub Label_openweathermap_MouseDown()
-
-Shell "xdg-open http://openweathermap.org"
-
+  
+  Shell "xdg-open http://openweathermap.org"
+  
 End

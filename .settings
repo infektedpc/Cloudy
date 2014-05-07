@@ -5,10 +5,9 @@ Count=0
 Count=0
 
 [OpenFile]
-Active=1
 File[1]=".src/FMain.form"
-File[2]=".src/FMain.class:65.14"
-Fold[2]=[12,141,178]
+Active=2
+File[2]=".src/FMain.class:120.55"
 Count=2
 
 [Watches]
